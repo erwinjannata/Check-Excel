@@ -5,8 +5,8 @@ date_column = [
 ]
 
 source = pd.read_csv(
-    rf"C:\Users\Lenovo\Downloads\Inbound_16Feb_2026-17Feb_2026(1)_9444479.csv",
-    encoding="iso-8859-1")
+    rf"C:\Users\Lenovo\Downloads\Inbound_21May_2026(1)_9767050.csv",
+    encoding="iso-8859-1", low_memory=False)
 
 data = pd.DataFrame(data=source, columns=date_column)
 

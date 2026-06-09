@@ -1,7 +1,8 @@
 import pandas as pd
+from datetime import datetime
 
 source = pd.read_csv(
-    rf"C:\Users\Lenovo\Downloads\Inbound_21May_2026(1)_9767050.csv",
+    rf"C:\Users\Lenovo\Downloads\Inbound_05Jun_2026_9810575.csv",
     encoding="iso-8859-1", low_memory=False)
 
 # Close
@@ -51,7 +52,11 @@ closed_groups = closed.groupby(
     closed["INBOUND_MANIFEST_DATE"].dt.strftime("%B %Y"))
 
 for month, group in closed_groups:
-    group.to_csv(rf"results\inbound\Close_{month}.csv", index=False)
+    monthObj = datetime.strptime(month, "%B %Y")
+    monthNum = monthObj.strftime("%m")
+
+    group.to_csv(
+        rf"results\inbound\{monthNum}. Close_{month}.csv", index=False)
 
 # Auto Close
 autoclose_mask = source["CODING"].isin(

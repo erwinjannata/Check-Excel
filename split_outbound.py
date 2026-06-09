@@ -1,7 +1,8 @@
 import pandas as pd
+from datetime import datetime
 
 source = pd.read_csv(
-    rf"C:\Users\Lenovo\Downloads\Outbound_21May_2026_9767043.csv",
+    rf"C:\Users\Lenovo\Downloads\Outbound_05Jun_2026_9810574.csv",
     encoding="iso-8859-1", low_memory=False)
 
 # Close
@@ -11,8 +12,11 @@ closed = source[closed_mask]
 closed["TGL_ENTRY"] = pd.to_datetime(closed["TGL_ENTRY"])
 closed_groups = closed.groupby(closed["TGL_ENTRY"].dt.strftime("%B %Y"))
 for month, group in closed_groups:
+    monthObj = datetime.strptime(month, "%B %Y")
+    monthNum = monthObj.strftime("%m")
+
     group.to_csv(
-        rf"results\outbound\Close_{month}.csv", index=False)
+        rf"results\outbound\{monthNum}. Close_{month}.csv", index=False)
 
 # AWB Cancel
 cancel_mask = source["AWB_CANCEL"] == "Y"
@@ -21,7 +25,7 @@ if not cancel.empty:
     cancel["TGL_ENTRY"] = pd.to_datetime(cancel["TGL_ENTRY"])
     cancel_groups = cancel.groupby(cancel["TGL_ENTRY"].dt.to_period("Y"))
     for month, group in cancel_groups:
-        group.to_csv(rf"results\outbound\Cancel_{month}.csv", index=False)
+        group.to_csv(rf"results\outbound\00. Cancel_{month}.csv", index=False)
 
 # Auto Close
 autoclose_mask = source["CODING"].isin(
@@ -32,7 +36,8 @@ if not autoclose.empty:
     autoclose_groups = autoclose.groupby(
         autoclose["TGL_ENTRY"].dt.to_period("Y"))
     for month, group in autoclose_groups:
-        group.to_csv(rf"results\outbound\AutoClose_{month}.csv", index=False)
+        group.to_csv(
+            rf"results\outbound\00. AutoClose_{month}.csv", index=False)
 
 # Open
 # Remove the closed, cancel, and autoclose from main dataframe first
